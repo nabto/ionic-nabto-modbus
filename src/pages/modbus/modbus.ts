@@ -5,13 +5,14 @@ import { LoadingController } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
 import { NabtoDevice } from '../../app/device.class';
 import { NabtoService } from '../../app/nabto.service';
+// import * as hexconverter from "hexconverter";
 
 declare var NabtoError;
 
 @IonicPage()
 @Component({
   selector: 'page-modbus',
-  templateUrl: 'mobus.html'
+  templateUrl: 'modbus.html'
 })
 export class ModbusPage {
   
