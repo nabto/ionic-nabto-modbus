@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{device.name}}</ion-title>
+    <ion-title>{{deviceName}}</ion-title>
     <ion-buttons end>
       <button ion-button icon-only (tap)="home()">
         <ion-icon name="home" color="secondary"></ion-icon>
@@ -16,7 +16,7 @@
     <!-- Modbus variables list -->
     <ion-item>
       <ion-label fixed>Reg X</ion-label>
-      <div item-content>24494</div>
+      <div item-content>{{register1_str}}</div>
     </ion-item>
     <button ion-item>
       <ion-label fixed>Reg Y</ion-label>
@@ -25,6 +25,16 @@
 
   </ion-list>
 
+  <ng-container *ngFor="let regconf of registerConfigurations; let i = index">
+    <ion-item>
+      <ion-label fixed>{{regconf.n}}</ion-label>
+      <div item-content>{{regconf.v}}</div>
+    </ion-item>
+    
+    
+  </ng-container>
+
+  
   <!-- refresh and config buttons -->
   <ion-row>
     <ion-col text-left>

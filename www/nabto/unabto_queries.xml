@@ -175,49 +175,34 @@
 
 
   
-  <!-- heatpump demo queries -->
-
-  <!-- get all state details -->
-  <query name="heatpump_get_full_state.json" id="20000">
+  <!-- Modbus demo queries -->
+  <query name="modbus_function.json" description="Execute a function on the specified Modbus device." id="20000">
     <request>
+      <parameter name="bus" type="uint8"/>
+      <parameter name="address" type="uint8"/>
+      <parameter name="data" type="raw" representation="hex"/>
     </request>
     <response format="json">
-      <parameter name="activated" type="uint8"/>
-      <parameter name="mode" type="uint32"/>
-      <parameter name="target_temperature" type="uint32"/>
-      <parameter name="room_temperature" type="uint32"/>
+      <parameter name="bus" type="uint8"/>
+      <parameter name="address" type="uint8"/>
+      <!-- uint8 address, uint8 functionCode, uint8[] data -->
+      <!-- uint8 address, uint8 functionCode, uint8 exceptionCode -->
+      <parameter name="result" type="uint8"/>
+      <parameter name="data" type="raw" representation="hex"/>
+      <parameter name="queryStatus" type="uint8"/>
     </response>
   </query>
 
-  <!-- set activation state: 1 => on, 0 => off -->
-  <query name="heatpump_set_activation_state.json" id="20010">
+
+  <!-- Modbus configuration -->
+  <query name="modbus_configuration.json" description="Returns the modbus configuration" id="20001">
     <request>
-      <parameter name="activated" type="uint8"/>
     </request>
     <response format="json">
-      <parameter name="activated" type="uint8"/>
+      <parameter name="data" type="raw" />
     </response>
   </query>
 
-  <!-- set thermostat target temperature -->
-  <query name="heatpump_set_target_temperature.json" id="20020">
-    <request>
-      <parameter name="temperature" type="uint32"/>
-    </request>
-    <response format="json">
-      <parameter name="temperature" type="uint32"/>
-    </response>
-  </query>
-
-  <!-- set operational mode -->
-  <query name="heatpump_set_mode.json" id="20030">
-    <request>
-      <parameter name="mode" type="uint32"/>
-    </request>
-    <response format="json">
-      <parameter name="mode" type="uint32"/>
-    </response>
-  </query>
 
 </unabto_queries>
 

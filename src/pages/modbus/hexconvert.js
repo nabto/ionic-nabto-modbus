@@ -312,3 +312,5 @@ module.exports.unittest = function () {
   console.log("dec2hex hex2dec test:" + hexconvert.float2hex(test_float1));
 };  
 
+module.exports.hexconvert = hexconvert;
+

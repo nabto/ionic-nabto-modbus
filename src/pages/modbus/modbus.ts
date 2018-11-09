@@ -1,57 +1,78 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { App, NavController, NavParams } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
 import { NabtoDevice } from '../../app/device.class';
 import { NabtoService } from '../../app/nabto.service';
-// import * as hexconverter from "hexconverter";
+import { hexconvert } from './hexconvert';
+
 
 declare var NabtoError;
+
+class RegisterConfiguration {
+  n: string;
+  t: string;
+  r: string;
+  v: string;
+}
+
 
 @IonicPage()
 @Component({
   selector: 'page-modbus',
   templateUrl: 'modbus.html'
 })
+
+
 export class ModbusPage {
+
+  registers: string[];
+  registerMap: string[];
+  
+  configuration: object;
   
   device: NabtoDevice;
+  deviceName: string;
+  
+  registerConfigurations: RegisterConfiguration[];
+
   busy: boolean;
-  activated: boolean;
   offline: boolean;
-  temperature: number;
-  mode: string;
-  roomTemperature: number;
-  maxTemp: number;
-  minTemp: number;
   timer: any;
   spinner: any;
   unavailableStatus: string;
   firstView: boolean = true;
-
+  
   constructor(private navCtrl: NavController,
               private nabtoService: NabtoService,
               private toastCtrl: ToastController,
               private loadingCtrl: LoadingController,
               private navParams: NavParams,
-              private modalCtrl: ModalController) {
+              private modalCtrl: ModalController,
+	      private app: App) {
+
     this.device = navParams.get('device');
-    this.temperature = undefined;
-    this.activated = false;
-    this.offline = true;
-    this.mode = undefined;
-    this.maxTemp = 30;
-    this.minTemp = 16;
     this.timer = undefined;
     this.busy = false;
+
   }
 
-  ionViewDidLoad() {
-    this.refresh();
-  }
   
+
+  ionViewDidLoad() {
+    if(this.device == undefined || this.device == null) {
+      this.navCtrl.setRoot('OverviewPage');  // .then(() => {this.navControl.popToRoot()});
+      return;     
+    }
+    this.refresh();
+    this.deviceName = device.name;
+  }
+
+
+    
   ionViewDidEnter() {
+
     if (!this.firstView) {
       this.refresh();
     } else {
@@ -64,41 +85,73 @@ export class ModbusPage {
 
   refresh() {
     this.busyBegin();
-    this.nabtoService.invokeRpc(this.device.id, "heatpump_get_full_state.json").
+    var self = this;
+    this.nabtoService.invokeRpc(this.device.id, "modbus_configuration.json").
       then((state: any) => {
+
+
+        console.log('data:' + state.data);
+        self.configuration = JSON.parse(state.data);
+
+	self.registerConfigurations = self.configuration.r;
+	
+	console.log('configuration[a]:' + this.configuration.a);
+        console.log('configuration[r].length:' + this.configuration.r.length);
+
+	self.registerConfigurations.forEach(function (item, index) {
+
+          console.log("Register" + index + ":" + item.r);
+	  self.readHoldingRegisterNumber(1,item.r, (value:number)=> {
+	    item.v=value;
+	    console.log("index:"+index);
+	    console.log("Register:"+self.registerConfigurations[index].v);
+	  });
+	});
+	
+	
         this.busyEnd();
-        console.log(`Got new heatpump state: ${JSON.stringify(state)}`);
-        this.activated = state.activated;
-        this.offline = false;
-        this.mode = this.mapDeviceMode(state.mode);
-        this.temperature = this.mapDeviceTemp(state.target_temperature);
-        this.roomTemperature = state.room_temperature;
-        if (!this.activated) {
-          this.unavailableStatus = "Powered off";
-        }
-        console.log(`offline=${this.offline}, activated=${this.activated}`);
+	
       }).catch(error => {
         this.busyEnd();
         this.handleError(error);
       });
   }
 
-  activationToggled() {
-    console.log("Activation toggled - state is now " + this.activated);
-    this.busyBegin();
-    this.nabtoService.invokeRpc(this.device.id, "heatpump_set_activation_state.json",
-                                { "activated": this.activated ? 1 : 0 }).
+  
+  readHoldingRegisterNumber(address: number, register: string, callback: (data: number) => void) {
+    var tmpfunc = (hexdata:string) => {
+      console.log("hexdata:" + hexdata);
+      var number = hexconvert.hex2dec(hexdata);
+      console.log("Hexdata-dec:"+ number);
+      callback(number);
+    }
+    this.readHoldingRegisters(address, register, 1, tmpfunc);
+  }
+    
+  readHoldingRegisters(address: number, register: string, words: number, callback: (data: string) => void) {
+
+    var hexAddress = hexconvert.pad(hexconvert.dec2hex(address),2);
+    var modbusCmd = hexAddress + "03" + register + hexconvert.pad(hexconvert.dec2hex(words),4);
+
+    console.log("Modbus command:" + modbusCmd);
+
+    this.nabtoService.invokeRpc(this.device.id, "modbus_function.json",
+				{ "bus":0, "address":hexAddress, "data": modbusCmd}).
       then((state: any) => {
-        this.busyEnd();
-        this.activated = state.activated;
-        if (!this.activated) {
-          this.unavailableStatus = "Powered off";
-        }
+
+	var tmpStr = state.data.substring(6);
+	
+	console.log("data:" + tmpStr);
+	callback(tmpStr);
+
       }).catch(error => {
+	console.log("ERROR:"+error);
         this.busyEnd();
         this.handleError(error);
       });
+    
   }
+
   
   busyBegin() {
     if (!this.busy) {
@@ -118,85 +171,6 @@ export class ModbusPage {
       this.spinner = undefined;
     }
   }
-  
-  tempChanged(temp) {
-    console.log(`Temperature changed - value is now ${this.temperature}, event temp is ${temp}`);
-    this.temperature = temp;
-    this.updateTargetTemperature();
-  }
-
-  increment() {
-    if (this.activated) { // we cannot disable tap events on icon in html
-      if (this.temperature < this.maxTemp) {
-        this.temperature++;
-      }
-      this.updateTargetTemperature();
-    }
-  }
-
-  decrement() {
-    if (this.activated) { // we cannot disable tap events on icon in html
-      if (this.temperature > this.minTemp) {
-        this.temperature--;
-      }
-      this.updateTargetTemperature();
-    }
-  }
-
-  updateTargetTemperature() {
-    // XXX: no spinner as long as we don't debounce and invoke device every time (it yields odd behavior)
-    this.nabtoService.invokeRpc(this.device.id, "heatpump_set_target_temperature.json",
-                                { "temperature": this.temperature }).
-      then((state: any) => {
-        this.temperature = state.temperature;
-      }).catch(error => {
-        this.handleError(error);
-      });
-  }
-
-  updateMode() {
-    this.busyBegin();
-    this.nabtoService.invokeRpc(this.device.id, "heatpump_set_mode.json",
-                                { "mode": this.mapToDeviceMode(this.mode) }).
-      then((state: any) => {
-        this.busyEnd();
-        this.mode = this.mapDeviceMode(state.mode);
-      }).catch(error => {
-        this.busyEnd();
-        this.handleError(error);
-      });
-    //});
-  }
-  
-  mapDeviceMode(mode: number) {
-    switch (mode) {
-    case 0: return "cool";
-    case 1: return "heat";
-    case 2: return "circulate";
-    case 3: return "dehumidify";
-    default: return "unknown";
-    }
-  }
-
-  mapToDeviceMode(mode: string) {
-    switch (mode) {
-    case "cool": return 0;
-    case "heat": return 1;
-    case "circulate": return 2;
-    case "dehumidify": return 3;
-    default: return -1;
-    }
-  }
-
-  mapDeviceTemp(tempFromDevice: number) {
-    if (tempFromDevice < this.minTemp) {
-      return this.minTemp;
-    } else if (tempFromDevice > this.maxTemp) {
-      return this.maxTemp;
-    } else {
-      return tempFromDevice;
-    }
-  }
 
   handleError(error: any) {
     console.log(`Handling error: ${error.code}`);
@@ -208,6 +182,8 @@ export class ModbusPage {
     }
     this.showToast(error.message);
   }
+
+  
 
   showToast(message: string) {
     var opts = <any>{
