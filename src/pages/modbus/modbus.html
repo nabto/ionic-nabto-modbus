@@ -14,21 +14,13 @@
   <ion-list>
 
     <!-- Modbus variables list -->
-    <ion-item>
-      <ion-label fixed>Reg X</ion-label>
-      <div item-content>{{register1_str}}</div>
-    </ion-item>
-    <button ion-item>
-      <ion-label fixed>Reg Y</ion-label>
-      <div item-content>22994</div>
-    </button>
 
   </ion-list>
 
   <ng-container *ngFor="let regconf of registerConfigurations; let i = index">
     <ion-item>
       <ion-label fixed>{{regconf.n}}</ion-label>
-      <div item-content>{{regconf.v}}</div>
+      <div item-end>{{regconf.v}}</div>
     </ion-item>
     
     

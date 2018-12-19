@@ -15,6 +15,13 @@ class RegisterConfiguration {
   t: string;
   r: string;
   v: string;
+  f: string;
+}
+
+class ModbusConfiguration {
+
+  a: string;
+  r: RegisterConfiguration[];
 }
 
 
@@ -30,7 +37,7 @@ export class ModbusPage {
   registers: string[];
   registerMap: string[];
   
-  configuration: object;
+  configuration: ModbusConfiguration;
   
   device: NabtoDevice;
   deviceName: string;
@@ -66,7 +73,7 @@ export class ModbusPage {
       return;     
     }
     this.refresh();
-    this.deviceName = device.name;
+    this.deviceName = this.device.name;
   }
 
 
@@ -98,11 +105,17 @@ export class ModbusPage {
 	console.log('configuration[a]:' + this.configuration.a);
         console.log('configuration[r].length:' + this.configuration.r.length);
 
-	self.registerConfigurations.forEach(function (item, index) {
+	self.registerConfigurations.forEach(function (item:RegisterConfiguration, index) {
 
           console.log("Register" + index + ":" + item.r);
 	  self.readHoldingRegisterNumber(1,item.r, (value:number)=> {
-	    item.v=value;
+	    console.log("item.f="+item.f);
+	    if(typeof item.f === "undefined" || item.f == "") {
+	      item.v=""+value;
+	    } else {
+	      var formatter = new Function('r', '"use strict"; return '+item.f);
+	      item.v=""+formatter(value);
+	    }
 	    console.log("index:"+index);
 	    console.log("Register:"+self.registerConfigurations[index].v);
 	  });
@@ -210,11 +223,11 @@ export class ModbusPage {
   }
 
   available() {
-    return this.activated && !this.offline;
+    return !this.offline;
   }
 
   unavailable() {
-    return !this.activated || this.offline;
+    return this.offline;
   }
 
   home() {
