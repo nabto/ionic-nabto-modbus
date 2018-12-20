@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.appmyproduct.heat" ios-CFBundleVersion="2" version="2.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>AMP Heat</name>
-    <description>AppMyProduct remote control example app</description>
-    <author email="support@appmyproduct.com" href="https://www.appmyproduct.com/">AppMyProduct Team</author>
-    <content original-src="index.html" src="http://192.168.2.109:8100" />
+    <name>P2P Modbus client</name>
+    <description>Remote P2P modbus control</description>
+    <author email="support@nabto.com" href="https://www.nabto.com/">Nabto Team</author>
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -83,6 +83,7 @@
     <preference name="FadeSplashScreenDuration" value="300" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
+    <preference name="deployment-target" value="11.0" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
@@ -98,7 +99,7 @@
     <plugin name="cordova-plugin-console" spec="^1.1.0" />
     <plugin name="cordova-plugin-device" spec="^1.1.7" />
     <plugin name="cordova-plugin-device-name" spec="^1.3.2" />
-    <plugin name="cordova-plugin-nabto" spec="^2.4.4" />
+    <plugin name="cordova-plugin-nabto" spec="^2.5.1" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.1.0" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.1" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
