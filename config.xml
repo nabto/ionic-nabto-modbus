@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.appmyproduct.heat" ios-CFBundleVersion="2" version="2.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.nabto.iosapp.modbus" ios-CFBundleVersion="2" version="2.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>P2P Modbus client</name>
     <description>Remote P2P modbus control</description>
     <author email="support@nabto.com" href="https://www.nabto.com/">Nabto Team</author>
