@@ -15,6 +15,11 @@ Install _fastlane_ using
 or alternatively using `brew cask install fastlane`
 
 # Available Actions
+### create
+```
+fastlane create
+```
+
 ### cordova_build
 ```
 fastlane cordova_build

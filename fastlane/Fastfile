@@ -10,6 +10,17 @@
 #
 fastlane_version "2.0.0"
 
+lane :create do
+  produce(
+      username: ENV['FASTLANE_USER'],
+      app_identifier: ENV['APP_IDENTIFIER'],
+      app_name: ENV['APP_NAME'],
+      language: ENV['PRODUCE_LANGUAGE'],
+      app_version: ENV['APP_VERSION'],
+  )
+  upload_to_app_store
+end
+
 lane :cordova_build do
   # Create distribution cert
   cert
