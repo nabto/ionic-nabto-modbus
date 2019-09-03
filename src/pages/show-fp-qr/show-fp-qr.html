@@ -1,0 +1,27 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Share Fingerprint</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (tap)="home()">
+        <ion-icon name="home" color="secondary"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <p>The device owner can scan the QR code to grant you access to a device (that is, add your public key fingerprint to the device's access control list)</p>
+  <ion-card>
+    <ngx-qrcode [qrc-value]="qrInput"></ngx-qrcode>
+  </ion-card>
+  <pre>
+    {{fingerprint}}
+  </pre>
+  <p>You can also copy the fingerprint and send it to the device owner using a trusted means of communication</p>
+  <button ion-button color="light"  block (click)="copyFingerprint()">
+    Copy fingerprint to clipboard
+  </button>
+
+</ion-content>

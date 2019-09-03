@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Rx';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
+import { ModalController } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
 import { NabtoService } from '../../app/nabto.service';
 import { NabtoDevice } from '../../app/device.class';
@@ -20,7 +21,7 @@ export class DiscoverPage {
   longTitle: string;
   shortTitle: string;
   view : ViewController;
-  
+
   public devices: Observable<NabtoDevice[]>;
   public deviceInfoSource: Subject<NabtoDevice[]>;
   private recentIds: string[];
@@ -29,11 +30,12 @@ export class DiscoverPage {
     this.view = this.navCtrl.getActive();
     this.refresh();
   }
-  
+
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public toastCtrl: ToastController,
               private alertCtrl: AlertController,
+              private modalCtrl: ModalController,
               public platform: Platform,
               private nabtoService: NabtoService,
               private bookmarksService: BookmarksService
@@ -71,16 +73,20 @@ export class DiscoverPage {
   refresh() {
     this.busy = true;
     this.nabtoService.discover().then((ids: string[]) => {
-      this.busy = false;
-      this.nabtoService.prepareInvoke(ids).then(() => {
-        // listview observes this.devices and will be populated as data is received 
-        this.nabtoService.getPublicInfo(ids.map((id) => new Bookmark(id)), this.deviceInfoSource);
-        this.recentIds = ids;
-      });
+      this.prepareDevices(ids);
     }).catch((error) => {
       this.showToast(error.message);
       console.error("Error discovering devices: " + JSON.stringify(error));
       this.busy = false;
+    });
+  }
+
+  prepareDevices(ids: string[]) {
+    this.busy = false;
+    this.nabtoService.prepareInvoke(ids).then(() => {
+      // listview observes this.devices and will be populated as data is received
+      this.nabtoService.getPublicInfo(ids.map((id) => new Bookmark(id)), this.deviceInfoSource);
+      this.recentIds = ids;
     });
   }
 
@@ -93,12 +99,12 @@ export class DiscoverPage {
     });
     toast.present();
   }
-  
+
   itemTapped(event, device) {
     if (!device.reachable) {
       this.showToast(device.description);
       return;
-    }    
+    }
     if (device.hasInterfaceInfo) {
       this.attemptPair(device);
     } else {
@@ -140,7 +146,7 @@ export class DiscoverPage {
     });
     alert.present();
   }
-  
+
   isAccessible(device) {
     return device.openForPairing || device.currentUserIsOwner;
   }
@@ -154,7 +160,7 @@ export class DiscoverPage {
     toast.present();
     // if the user has deleted bookmark, add again
     this.bookmarksService.addBookmarkFromDevice(device);
-    this.navCtrl.push(Customization.vendorPage, { 
+    this.navCtrl.push(Customization.vendorPage, {
       device: device
     });
   }
@@ -166,7 +172,7 @@ export class DiscoverPage {
       longTitle: "Pair local device"
     });
   }
-  
+
   handleClosedDevice() {
     let alert = this.alertCtrl.create({
       title: 'Device not open',
@@ -182,8 +188,8 @@ export class DiscoverPage {
   }
 
   home() {
+    this.navCtrl.setRoot('OverviewPage');
     this.navCtrl.popToRoot();
   }
-  
-}
 
+}

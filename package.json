@@ -1,72 +1,84 @@
 {
-    "name": "ionic-starter-nabto",
-    "author": "Nabto ApS",
-    "homepage": "https://www.nabto.com",
-    "private": true,
-    "scripts": {
-        "ionic:build": "ionic-app-scripts build",
-        "ionic:serve": "ionic-app-scripts serve"
-    },
-    "dependencies": {
-        "@angular/common": "4.4.3",
-        "@angular/compiler": "4.4.3",
-        "@angular/compiler-cli": "4.4.3",
-        "@angular/core": "4.4.3",
-        "@angular/forms": "4.4.3",
-        "@angular/http": "4.4.3",
-        "@angular/platform-browser": "4.4.3",
-        "@angular/platform-browser-dynamic": "4.4.3",
-        "@ionic-native/core": "4.3.0",
-        "@ionic-native/splash-screen": "4.3.0",
-        "@ionic-native/status-bar": "4.3.0",
-        "@ionic/storage": "2.0.1",
-        "cordova-android": "^7.1.1",
-        "cordova-custom-config": "^3.3.0",
-        "cordova-ios": "4.5.5",
-        "cordova-plugin-console": "^1.1.0",
-        "cordova-plugin-device": "^1.1.7",
-        "cordova-plugin-device-name": "^1.3.4",
-        "cordova-plugin-ionic-webview": "^1.2.1",
-        "cordova-plugin-nabto": "^2.6.0",
-        "cordova-plugin-splashscreen": "^4.1.0",
-        "cordova-plugin-statusbar": "^2.4.2",
-        "cordova-plugin-whitelist": "^1.3.3",
-        "ionic-angular": "3.7.1",
-        "ionicons": "3.0.0",
-        "rxjs": "5.4.3",
-        "sw-toolbox": "3.6.0",
-        "zone.js": "0.8.18"
-    },
-    "devDependencies": {
-        "@ionic/app-scripts": "3.2.1",
-        "ionic": "^3.15.0",
-        "typescript": "2.3.4"
-    },
-    "cordovaPlugins": [],
-    "cordovaPlatforms": [
-        "ios",
-        {
-            "platform": "ios",
-            "version": "",
-            "locator": "ios"
-        }
-    ],
-    "description": "ionic-starter-nabto: An Ionic project",
-    "cordova": {
-        "plugins": {
-            "cordova-plugin-splashscreen": {},
-            "cordova-plugin-statusbar": {},
-            "cordova-custom-config": {},
-            "cordova-plugin-console": {},
-            "cordova-plugin-device": {},
-            "cordova-plugin-device-name": {},
-            "cordova-plugin-whitelist": {},
-            "cordova-plugin-nabto": {},
-            "cordova-plugin-ionic-webview": {}
-        },
-        "platforms": [
-            "android",
-            "ios"
-        ]
+  "name": "ionic-starter-nabto",
+  "author": "Nabto ApS",
+  "homepage": "https://www.nabto.com",
+  "private": true,
+  "scripts": {
+    "ionic:build": "ionic-app-scripts build",
+    "ionic:serve": "ionic-app-scripts serve"
+  },
+  "dependencies": {
+    "@angular/common": "4.4.3",
+    "@angular/compiler": "4.4.3",
+    "@angular/compiler-cli": "4.4.3",
+    "@angular/core": "4.4.3",
+    "@angular/forms": "4.4.3",
+    "@angular/http": "4.4.3",
+    "@angular/platform-browser": "4.4.3",
+    "@angular/platform-browser-dynamic": "4.4.3",
+    "@ionic-native/barcode-scanner": "^4.20.0",
+    "@ionic-native/core": "4.3.0",
+    "@ionic-native/ionic-webview": "^5.12.0",
+    "@ionic-native/splash-screen": "4.3.0",
+    "@ionic-native/status-bar": "4.3.0",
+    "@ionic/storage": "2.0.1",
+    "cordova-android": "8.0.0",
+    "cordova-clipboard": "^1.3.0",
+    "cordova-custom-config": "^3.3.0",
+    "cordova-ios": "5.0.1",
+    "cordova-plugin-console": "^1.1.0",
+    "cordova-plugin-device": "^1.1.7",
+    "cordova-plugin-device-name": "^1.3.5",
+    "cordova-plugin-ionic-webview": "^4.1.1",
+    "cordova-plugin-nabto": "^2.6.2",
+    "cordova-plugin-splashscreen": "^4.1.0",
+    "cordova-plugin-statusbar": "^2.4.3",
+    "cordova-plugin-whitelist": "^1.3.4",
+    "ionic-angular": "^3.9.6",
+    "ionicons": "3.0.0",
+    "ngx-qrcode2": "0.0.9",
+    "phonegap-plugin-barcodescanner": "^8.1.0",
+    "rxjs": "5.4.3",
+    "sw-toolbox": "3.6.0",
+    "zone.js": "0.8.18"
+  },
+  "devDependencies": {
+    "@ionic/app-scripts": "^3.2.4",
+    "ionic": "^3.15.0",
+    "typescript": "2.3.4"
+  },
+  "cordovaPlugins": [],
+  "cordovaPlatforms": [
+    "ios",
+    {
+      "platform": "ios",
+      "version": "",
+      "locator": "ios"
     }
+  ],
+  "description": "ionic-starter-nabto: An Ionic project",
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-custom-config": {},
+      "cordova-plugin-console": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-device-name": {},
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-ionic-webview": {
+        "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
+      },
+      "cordova-clipboard": {},
+      "phonegap-plugin-barcodescanner": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+",
+        "CAMERA_USAGE_DESCRIPTION": "Scan QR code to add user to device access control list"
+      },
+      "cordova-plugin-nabto": {}
+    },
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  }
 }
